@@ -12,9 +12,6 @@ const state = createState().component({
   state: {
     counter: { value: 0 }
   },
-  selectors: {
-    counter: "counter"
-  },
   actions: {
     increment: ["by"],
     decrement: ["by"]
@@ -42,10 +39,10 @@ import connect from "./store";
 
 class App extends Component {
   render() {
-    const { counter, increment, decrement } = this.props;
+    const { value, increment, decrement } = this.props;
     return (
       <div>
-        <p>Current Value: {counter.value}</p>
+        <p>Current Value: {value}</p>
         <button onClick={() => increment(1)}>Increment</button>
         <button onClick={() => decrement(1)}>Decrement</button>
       </div>
@@ -54,7 +51,7 @@ class App extends Component {
 }
 
 export default connect(
-  selectors => ({ counter: selectors.counter }),
+  () => ({ value: "counter.value" }),
   actions => actions
 )(App);
 ```
