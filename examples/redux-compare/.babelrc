@@ -1,0 +1,34 @@
+{
+  presets: [
+    '@babel/preset-flow',
+    '@babel/preset-react',
+    [
+      '@babel/preset-env',
+      {
+        shippedProposals: true,
+        useBuiltIns: 'usage',
+        targets: {
+          node: true,
+          browsers: ['last 2 versions'],
+        },
+      },
+    ],
+    [
+      '@babel/preset-stage-0',
+      {
+        useBuiltIns: true,
+        decoratorsLegacy: true,
+      },
+    ],
+  ],
+  plugins: [
+    // [
+    //   // '@babel/plugin-transform-runtime',
+    //   {
+    //     regenerator: true,
+    //     polyfill: true,
+    //   },
+    // ],
+    // '@babel/plugin-proposal-optional-chaining',
+  ],
+}
