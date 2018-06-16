@@ -46,8 +46,8 @@ class App extends Component {
     return (
       <div>
         <p>Current Value: {counter.value}</p>
-        <button onClick={() => increment()}>Increment</button>
-        <button onClick={() => decrement()}>Decrement</button>
+        <button onClick={() => increment(1)}>Increment</button>
+        <button onClick={() => decrement(1)}>Decrement</button>
       </div>
     );
   }
