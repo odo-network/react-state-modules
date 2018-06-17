@@ -7,9 +7,18 @@ import { dispatchIncrement, dispatchDecrement } from './store/actions';
 import logo from './logo.svg';
 import './App.css';
 
+let time = false;
+
 class App extends Component {
+  componentDidUpdate() {
+    if (time) {
+      console.timeEnd('start');
+      time = false;
+    }
+  }
   render() {
     const { counter = {}, increment, decrement } = this.props;
+
     return (
       <div className="App">
         <header className="App-header">
@@ -17,8 +26,16 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <p className="App-intro">Current Value: {counter.value}</p>
-        <button onClick={() => increment(1, 'default')}>Increment</button>
-        <button onClick={() => decrement(1, 'default')}>Decrement</button>
+        <button
+          onClick={() => {
+            time = true;
+            console.time('start');
+            increment(1);
+          }}
+        >
+          Increment
+        </button>
+        <button onClick={() => decrement(1)}>Decrement</button>
       </div>
     );
   }
@@ -30,7 +47,7 @@ export default connect(
     // counter: props.counterID ? state.counter[props.counterID] : state.counter.default,
   }),
   dispatch => ({
-    increment: (by, counterID) => dispatch(dispatchIncrement(by, counterID)),
-    decrement: (by, counterID) => dispatch(dispatchDecrement(by, counterID)),
+    increment: by => dispatch(dispatchIncrement(by)),
+    decrement: by => dispatch(dispatchDecrement(by)),
   }),
 )(App);

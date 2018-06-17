@@ -59,7 +59,22 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
-    "state-modules": "^1.1.0"
+    "state-modules": "^1.3.2"
+  },
+  "nyc": {
+    "extension": [
+      ".jsx",
+      ".mjs"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "require": [
+      "@babel/register"
+    ],
+    "sourceMap": false,
+    "instrument": false
   },
   "ava": {
     "babel": false,

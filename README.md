@@ -1,6 +1,6 @@
 # React State Modules
 
-React State Modules mmakes it simple to connect your React Components to any of your State Modules easily. It provides a convenient mechanism that is meant to work similar to the `react-redux` connection pattern.
+React State Modules mmakes it simple to connect your React Components to any of your State Modules easily. It provides a convenient mechanism that is meant to work similar to the `react-redux` connection pattern. [state-modules](https://www.github.com/odo-network/state-modules) is an Application State Manager which produces similar effects to using `redux`, `redux-saga`, `reselect`, `seamless-immutable`, and `redux-saga-process`. However, it is packaged into a very small package with no dependencies (other than those written by and for this project).
 
 ```javascript
 // store.js

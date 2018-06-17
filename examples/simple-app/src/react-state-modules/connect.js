@@ -11,6 +11,8 @@ export default function reactStateModulesConnector(subscriber, actions) {
    */
   let isDynamicConnection = false;
 
+  const mergeState = subscriber.merger ? subscriber.merger : s => s;
+
   /**
    * When the connector utilizes dynamic selectors (using functions based on the props of the Component),
    * we need to update the selector subscriptions whenever props occur.  A true update will only occur if
@@ -21,8 +23,8 @@ export default function reactStateModulesConnector(subscriber, actions) {
       state.subscription.setSelectorProps(props);
     }
     return {
-      selectedState: subscriber.merge ? subscriber.merge(subscriber.state, props) : subscriber.state,
-      connectedDispatchers: subscriber.dispatchers,
+      state: mergeState(actions.getSelectorState(props), props),
+      actions: subscriber.dispatchers,
     };
   }
 
@@ -41,49 +43,37 @@ export default function reactStateModulesConnector(subscriber, actions) {
           const subscription = actions.subscribe({
             /**
              * Whenever the values selected by any of the components connected selectors change,
-             * the "next" function will be called by the connected StateModule.
+             * the "next" function will be called by the connected StateModule.  We simply forceUpdate
+             * the component which causes getDerivedStateFromProps to capture the update.
              */
-            next: value => {
-              this.#shouldUpdate = true;
-              this.setState(
-                {
-                  // The state as-selected in the "withSelectors"
-                  selectedState: value.state,
-                  // Actions connected in the "withDispatchers"
-                  connectedDispatchers: value.dispatchers,
-                },
-                () => {
-                  this.#shouldUpdate = false;
-                },
-              );
-            },
-            complete: () => {
-              subscription.unsubscibe();
-            },
+            next: () => this.forceUpdate(),
+            complete: () => subscription.unsubscribe(),
           });
           if (subscription.dynamic) {
             /* If the selectors have dynamic values (require props), add our static getDerivedStateFromProps */
             isDynamicConnection = true;
             // set initial props
             this.state.subscription = subscription;
-            subscription.setSelectorProps(this.props);
+            subscription.setSelectorProps(props);
           } else {
             isDynamicConnection = false;
           }
-          this.#shouldUpdate = false;
         }
       }
 
       state = {
         subscription: undefined,
-        selectedState: undefined,
-        connectedDispatchers: undefined,
+        state: undefined,
+        actions: undefined,
       };
 
       static getDerivedStateFromProps = getDerivedStateFromProps;
 
-      shouldComponentUpdate() {
-        return this.#shouldUpdate;
+      shouldComponentUpdate(np) {
+        if (np !== this.props) {
+          return true;
+        }
+        return false;
       }
 
       componentWillUnmount() {
@@ -92,20 +82,15 @@ export default function reactStateModulesConnector(subscriber, actions) {
         }
       }
 
-      #shouldUpdate = true;
-
-      #subscription = undefined;
-
       render() {
         const { forwardedRef, ...props } = this.props;
-        return (
-          <WrappedComponent
-            ref={forwardedRef}
-            {...props}
-            {...this.state.selectedState}
-            {...this.state.connectedDispatchers}
-          />
-        );
+        if (this.state.state) {
+          props.state = this.state.state;
+        }
+        if (this.state.actions) {
+          props.actions = this.state.actions;
+        }
+        return <WrappedComponent ref={forwardedRef} {...props} />;
       }
     }
 

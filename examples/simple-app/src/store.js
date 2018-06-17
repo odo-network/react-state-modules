@@ -4,21 +4,21 @@ import connectReact from './react-state-modules';
 const created = Date.now();
 
 const state = createState({
-  hooks: {
-    before: [
-      action => {
-        console.time(action.type);
-        console.group('[STATE-MODULES] DISPATCHING: ', action);
-      },
-    ],
-    after: [
-      (action, nextState) => {
-        console.log(nextState);
-        console.timeEnd(action.type);
-        console.groupEnd();
-      },
-    ],
-  },
+  // hooks: {
+  //   before: [
+  //     action => {
+  //       // console.group('[STATE-MODULES] DISPATCHING: ', action);
+  //       console.time(action.type);
+  //     },
+  //   ],
+  //   after: [
+  //     action => {
+  //       // console.log(nextState);
+  //       console.timeEnd(action.type);
+  //       console.groupEnd();
+  //     },
+  //   ],
+  // },
 });
 
 state.create({
@@ -32,7 +32,6 @@ state.create({
     counterByID: props => ['counter', props.counterID || 'default'],
   },
   actions: {
-    create: ['counterID', 'initialValue'],
     increment: ['by', 'counterID'],
     decrement: ['by', 'counterID'],
   },

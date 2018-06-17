@@ -4307,9 +4307,9 @@ stack-utils@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/stack-utils/-/stack-utils-1.0.1.tgz#d4f33ab54e8e38778b0ca5cfd3b3afb12db68620"
 
-state-modules@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/state-modules/-/state-modules-1.1.0.tgz#e39110f2f2cd0519506ce5b6d9cc6725da7e56bf"
+state-modules@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.npmjs.org/state-modules/-/state-modules-1.3.2.tgz#8a97c2ea937b40f9f3cf379c5c057e5f7a8e23b1"
   dependencies:
     immuta "^1.1.2"
     to-redux-type "^1.2.3"
