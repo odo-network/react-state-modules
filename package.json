@@ -1,7 +1,7 @@
 {
   "name": "react-state-modules",
   "description": "A lightweight immutable state management library",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Braden R. Napier",
   "private": false,
   "public": true,
@@ -79,7 +79,7 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
-    "state-modules": "^1.4.0"
+    "state-modules": "^1.5.0"
   },
   "nyc": {
     "reporter": [

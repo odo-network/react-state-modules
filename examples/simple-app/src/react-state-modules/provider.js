@@ -1,8 +1,18 @@
-import * as React from "react";
-import { Provider } from "./context";
+import * as React from 'react';
+import { Provider } from './context';
 
-export default class StateModuleProvider extends React.Component {
+export default class StateModuleTopLevelProvider extends React.Component {
+  #actions = {
+    // passed to our children via Provider
+    childActions: {
+      subscribe: flusher => {
+        flusher();
+      },
+      unsubscribe: () => {},
+    },
+  };
   render() {
-    return <Provider>{this.props.children}</Provider>;
+    console.log(this);
+    return <Provider value={this.#actions.childActions}>{this.props.children}</Provider>;
   }
 }

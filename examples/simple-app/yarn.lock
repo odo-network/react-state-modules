@@ -7055,9 +7055,9 @@ ssri@^5.2.4:
   dependencies:
     safe-buffer "^5.1.1"
 
-state-modules@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.npmjs.org/state-modules/-/state-modules-1.4.0.tgz#a89579c0ea15aa6a5fde06a5a74096814d3b6d44"
+state-modules@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.npmjs.org/state-modules/-/state-modules-1.5.0.tgz#0f7e02a59e951d72f44ca1174f82fec5a71aaa11"
   dependencies:
     immuta "^1.1.2"
     to-redux-type "^1.2.3"

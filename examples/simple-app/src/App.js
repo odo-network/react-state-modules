@@ -14,26 +14,24 @@ class App extends Component {
     }
   }
   render() {
-    const {
-      counter = {}, increment, decrement, actions, state,
-    } = this.props;
+    const { $state } = this.props;
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Welcome to React!!!!</h1>
         </header>
-        <p className="App-intro">Current Value: {state.counter.value}</p>
+        <p className="App-intro">Current Value: {$state.selected.counter.value}</p>
         <button
           onClick={() => {
             time = true;
             console.time('start');
-            actions.increment(1);
+            $state.actions.increment(1);
           }}
         >
           Increment
         </button>
-        <button onClick={() => actions.decrement(1)}>Decrement</button>
+        <button onClick={() => $state.actions.decrement(1)}>Decrement</button>
       </div>
     );
   }

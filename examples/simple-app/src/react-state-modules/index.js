@@ -1,2 +1,2 @@
 export { default } from './connect';
-// export * from './connect';
+export { default as Provider } from './provider';
