@@ -66,6 +66,7 @@ export default function reactStateModulesConnector(subscriber, listener) {
 
       constructor(props) {
         super(props);
+        console.log('Construct!');
         this.version = version;
         this.#parent = props.stateModuleParentActions;
 
@@ -251,7 +252,8 @@ export default function reactStateModulesConnector(subscriber, listener) {
     forwardRef.displayName = displayName;
 
     if (process.env.NODE_ENV !== 'production') {
-      StatefulComponentConnector.prototype.handleHotReload = function handleStateModulesHotReloadDuringDevelopment() {
+      StatefulComponentConnector.prototype.getSnapshotBeforeUpdate = function handleStateModulesHotReloadDuringDevelopment() {
+        console.log('handleHotReload! ', this, version, this && this.version);
         // When we are not running in production we add a function to handle the hot reloading
         // of our state modules when needed.
         if (this.version !== version && this.version > 1) {
