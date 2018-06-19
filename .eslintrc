@@ -5,8 +5,9 @@
     "sourceType": "module",
     "allowImportExportEverywhere": false
   },
-  "extends": ["plugin:flowtype/recommended", "airbnb"],
+  "extends": ["plugin:flowtype/recommended", "plugin:react/recommended", "airbnb"],
   "env": {
+    "mocha": true,
     "browser": true
   },
   "rules": {

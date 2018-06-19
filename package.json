@@ -1,7 +1,7 @@
 {
   "name": "react-state-modules",
   "description": "A lightweight immutable state management library",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Braden R. Napier",
   "private": false,
   "public": true,
@@ -9,7 +9,7 @@
   "main": "dist/index.js",
   "scripts": {
     "postinstall": "npm-run-all flow:flow-typed",
-    "prepublishOnly": "npm-run-all test build",
+    "prepublishOnly": "npm-run-all build",
     "flow:flow-typed": "rimraf flow-typed/npm && flow-typed install --overwrite || true",
     "build": "rimraf dist && npm-run-all -p build:*",
     "build:flow": "flow-copy-source src dist",
@@ -55,6 +55,10 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "8.2.1",
     "babel-plugin-dynamic-import-node": "^1.2.0",
+    "babel-plugin-istanbul": "^4.1.6",
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.1",
+    "cross-env": "^5.2.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-flowtype": "^2.49.3",
@@ -65,7 +69,9 @@
     "flow-bin": "^0.74.0",
     "flow-copy-source": "^2.0.0",
     "flow-typed": "^2.4.0",
+    "mocha": "^5.2.0",
     "npm-run-all": "^4.1.3",
+    "nyc": "^12.0.2",
     "rimraf": "^2.6.2"
   },
   "dependencies": {
