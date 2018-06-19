@@ -4296,9 +4296,9 @@ sshpk@^1.7.0:
     jsbn "~0.1.0"
     tweetnacl "~0.14.0"
 
-state-modules@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.npmjs.org/state-modules/-/state-modules-1.5.1.tgz#fa6f86bac3349703c946b856ecbd5d53d32e14d1"
+state-modules@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.npmjs.org/state-modules/-/state-modules-1.5.2.tgz#760701ba5d10279aa35230d46760938ddb85a797"
   dependencies:
     immuta "^1.1.2"
     to-redux-type "^1.2.3"
