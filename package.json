@@ -1,14 +1,14 @@
 {
   "name": "react-state-modules",
   "description": "A lightweight immutable state management library",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Braden R. Napier",
   "private": false,
   "public": true,
   "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
-    "postinstall": "npm-run-all flow:flow-typed",
+    "postinstall2": "npm-run-all flow:flow-typed",
     "prepublishOnly": "npm-run-all build",
     "flow:flow-typed": "rimraf flow-typed/npm && flow-typed install --overwrite || true",
     "build": "rimraf dist && npm-run-all -p build:*",
@@ -39,7 +39,11 @@
     "flux"
   ],
   "files": [
-    "dist/"
+    "dist/",
+    "dist/",
+    ".flowconfig",
+    ".nvmrc",
+    ".babelrc"
   ],
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.51",
