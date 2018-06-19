@@ -16,8 +16,6 @@ export default function reactStateModulesConnector(subscriber, listener) {
    */
   const isDynamicConnection = subscriber.dynamic;
 
-  const version = (currentSnapshot += 1);
-
   /**
    * When the connector utilizes dynamic selectors (using functions based on the props of the Component),
    * we need to update the selector subscriptions whenever props occur.  A true update will only occur if
@@ -58,6 +56,8 @@ export default function reactStateModulesConnector(subscriber, listener) {
   }
 
   return WrappedComponent => {
+    const version = (currentSnapshot += 1);
+
     /**
      * Calculated DisplayName which is provided to both the forardRed and connected component
      */
@@ -203,7 +203,7 @@ export default function reactStateModulesConnector(subscriber, listener) {
         // if our parent changes for any reason we will update the value
         this.#parent = $parent$;
 
-        if (this.hotReload) {
+        if (this.handleHotReload) {
           this.handleHotReload();
         }
 
