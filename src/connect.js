@@ -92,6 +92,9 @@ export default function reactStateModulesConnector(subscriber, listener) {
           }
           this.state.selected = this.state.subscription.getSelectorState(props);
           this.#childProps = getChildProps(props, this.state);
+          if (this.handleHotReload) {
+            this.handleHotReload = this.handleHotReload.bind(this);
+          }
         }
       }
 
