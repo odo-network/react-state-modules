@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import hoistNonReactStatics from 'hoist-non-react-statics';
+import React, { Component } from "react";
+import hoistNonReactStatics from "hoist-non-react-statics";
 
 function getDisplayName(WrappedComponent) {
-  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+  return WrappedComponent.displayName || WrappedComponent.name || "Component";
 }
 
 export default function reactStateModulesConnector(subscriber, actions) {
@@ -10,8 +10,6 @@ export default function reactStateModulesConnector(subscriber, actions) {
    * Indicates whether the connection requires prop updates sent to the subscriber.
    */
   let isDynamicConnection = false;
-
-  const mergeState = subscriber.merger ? subscriber.merger : s => s;
 
   /**
    * When the connector utilizes dynamic selectors (using functions based on the props of the Component),
@@ -23,8 +21,10 @@ export default function reactStateModulesConnector(subscriber, actions) {
       state.subscription.setSelectorProps(props);
     }
     return {
-      state: mergeState(actions.getSelectorState(props), props),
-      actions: subscriber.dispatchers,
+      selectedState: subscriber.merge
+        ? subscriber.merge(subscriber.state, props)
+        : subscriber.state,
+      connectedDispatchers: subscriber.dispatchers
     };
   }
 
@@ -43,37 +43,49 @@ export default function reactStateModulesConnector(subscriber, actions) {
           const subscription = actions.subscribe({
             /**
              * Whenever the values selected by any of the components connected selectors change,
-             * the "next" function will be called by the connected StateModule.  We simply forceUpdate
-             * the component which causes getDerivedStateFromProps to capture the update.
+             * the "next" function will be called by the connected StateModule.
              */
-            next: () => this.forceUpdate(),
-            complete: () => subscription.unsubscribe(),
+            next: value => {
+              this.#shouldUpdate = true;
+              this.setState(
+                {
+                  // The state as-selected in the "withSelectors"
+                  selectedState: value.state,
+                  // Actions connected in the "withDispatchers"
+                  connectedDispatchers: value.dispatchers
+                },
+                () => {
+                  this.#shouldUpdate = false;
+                }
+              );
+            },
+            complete: () => {
+              subscription.unsubscibe();
+            }
           });
           if (subscription.dynamic) {
             /* If the selectors have dynamic values (require props), add our static getDerivedStateFromProps */
             isDynamicConnection = true;
             // set initial props
             this.state.subscription = subscription;
-            subscription.setSelectorProps(props);
+            subscription.setSelectorProps(this.props);
           } else {
             isDynamicConnection = false;
           }
+          this.#shouldUpdate = false;
         }
       }
 
       state = {
         subscription: undefined,
-        state: undefined,
-        actions: undefined,
+        selectedState: undefined,
+        connectedDispatchers: undefined
       };
 
       static getDerivedStateFromProps = getDerivedStateFromProps;
 
-      shouldComponentUpdate(np) {
-        if (np !== this.props) {
-          return true;
-        }
-        return false;
+      shouldComponentUpdate() {
+        return this.#shouldUpdate;
       }
 
       componentWillUnmount() {
@@ -82,15 +94,20 @@ export default function reactStateModulesConnector(subscriber, actions) {
         }
       }
 
+      #shouldUpdate = true;
+
+      #subscription = undefined;
+
       render() {
         const { forwardedRef, ...props } = this.props;
-        if (this.state.state) {
-          props.state = this.state.state;
-        }
-        if (this.state.actions) {
-          props.actions = this.state.actions;
-        }
-        return <WrappedComponent ref={forwardedRef} {...props} />;
+        return (
+          <WrappedComponent
+            ref={forwardedRef}
+            {...props}
+            {...this.state.selectedState}
+            {...this.state.connectedDispatchers}
+          />
+        );
       }
     }
 
