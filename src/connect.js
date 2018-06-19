@@ -256,7 +256,7 @@ export default function reactStateModulesConnector(subscriber, listener) {
       StatefulComponentConnector.prototype.handleHotReload = function handleStateModulesHotReloadDuringDevelopment() {
         // When we are not running in production we add a function to handle the hot reloading
         // of our state modules when needed.
-        if (this.version !== version) {
+        if (this.version !== version && this.version > 1) {
           // When we hot reload, run the handleHotReload function
           console.log('Handle Hot Reload!');
         }
