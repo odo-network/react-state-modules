@@ -45,10 +45,10 @@ state.create({
     },
   },
   reducers: {
-    CREATE({ counterID, initialValue = 0 }, draft) {
+    CREATE(draft, { counterID, initialValue = 0 }) {
       this.helpers.createCounter(draft, counterID, initialValue);
     },
-    INCREMENT({ by = 1, counterID = 'default' }, draft) {
+    INCREMENT(draft, { by = 1, counterID = 'default' }) {
       const now = Date.now();
       if (!draft.counter[counterID]) {
         this.helpers.createCounter(draft, counterID, now);
@@ -59,7 +59,7 @@ state.create({
       counter.value += by;
       counter.updated = now;
     },
-    DECREMENT({ by = 1, counterID = 'default' }, draft) {
+    DECREMENT(draft, { by = 1, counterID = 'default' }) {
       const now = Date.now();
       if (!draft.counter[counterID]) {
         this.helpers.createCounter(draft, counterID, now);

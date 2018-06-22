@@ -7,15 +7,12 @@ function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
 
-// Helps with our hot reloading (taken from react-redux).
-let currentSnapshot = 0;
-
 export default function reactStateModulesConnector(subscriber, listener) {
   /**
    * Indicates whether the connection requires prop updates sent to the subscriber.
    */
   const isDynamicConnection = subscriber.dynamic;
-  const version = (currentSnapshot += 1);
+
   /**
    * When the connector utilizes dynamic selectors (using functions based on the props of the Component),
    * we need to update the selector subscriptions whenever props occur.  A true update will only occur if
@@ -66,8 +63,7 @@ export default function reactStateModulesConnector(subscriber, listener) {
 
       constructor(props) {
         super(props);
-        console.log('Construct!');
-        this.version = version;
+
         this.#parent = props.stateModuleParentActions;
 
         if (subscriber.selectors) {
@@ -91,9 +87,6 @@ export default function reactStateModulesConnector(subscriber, listener) {
           }
           this.state.selected = this.state.subscription.getSelectorState(props);
           this.#childProps = getChildProps(props, this.state);
-          if (this.handleHotReload) {
-            this.handleHotReload = this.handleHotReload.bind(this);
-          }
         }
       }
 
@@ -176,6 +169,7 @@ export default function reactStateModulesConnector(subscriber, listener) {
        * @memberof StatefulComponentConnector
        */
       stateModuleDidUpdate = (nextState, updateID) => {
+        console.log('StateModule Did Update');
         this.#dirty = true;
         this.state.selected = nextState;
         this.state.updateID = updateID;
@@ -204,10 +198,6 @@ export default function reactStateModulesConnector(subscriber, listener) {
 
         // if our parent changes for any reason we will update the value
         this.#parent = $parent$;
-
-        if (this.handleHotReload) {
-          this.handleHotReload();
-        }
 
         if (this.state.parentStateUpdated || this.#dirty) {
           this.state.parentStateUpdated = false;
@@ -250,18 +240,6 @@ export default function reactStateModulesConnector(subscriber, listener) {
     hoistNonReactStatics(StatefulComponentConnector, WrappedComponent);
 
     forwardRef.displayName = displayName;
-
-    if (process.env.NODE_ENV !== 'production') {
-      StatefulComponentConnector.prototype.getSnapshotBeforeUpdate = function handleStateModulesHotReloadDuringDevelopment() {
-        console.log('handleHotReload! ', this, version, this && this.version);
-        // When we are not running in production we add a function to handle the hot reloading
-        // of our state modules when needed.
-        if (this.version !== version && this.version > 1) {
-          // When we hot reload, run the handleHotReload function
-          console.log('Handle Hot Reload!');
-        }
-      };
-    }
 
     return React.forwardRef(forwardRef);
   };

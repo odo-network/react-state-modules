@@ -7,16 +7,11 @@ function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
 
-// Helps with our hot reloading (taken from react-redux).
-let currentSnapshot = 0;
-
 export default function reactStateModulesConnector(subscriber, listener) {
   /**
    * Indicates whether the connection requires prop updates sent to the subscriber.
    */
   const isDynamicConnection = subscriber.dynamic;
-
-  const version = (currentSnapshot += 1);
 
   /**
    * When the connector utilizes dynamic selectors (using functions based on the props of the Component),
@@ -68,7 +63,7 @@ export default function reactStateModulesConnector(subscriber, listener) {
 
       constructor(props) {
         super(props);
-        this.version = version;
+
         this.#parent = props.stateModuleParentActions;
 
         if (subscriber.selectors) {
@@ -174,6 +169,7 @@ export default function reactStateModulesConnector(subscriber, listener) {
        * @memberof StatefulComponentConnector
        */
       stateModuleDidUpdate = (nextState, updateID) => {
+        console.log('StateModule Did Update');
         this.#dirty = true;
         this.state.selected = nextState;
         this.state.updateID = updateID;
@@ -202,10 +198,6 @@ export default function reactStateModulesConnector(subscriber, listener) {
 
         // if our parent changes for any reason we will update the value
         this.#parent = $parent$;
-
-        if (this.hotReload) {
-          this.handleHotReload();
-        }
 
         if (this.state.parentStateUpdated || this.#dirty) {
           this.state.parentStateUpdated = false;
@@ -248,17 +240,6 @@ export default function reactStateModulesConnector(subscriber, listener) {
     hoistNonReactStatics(StatefulComponentConnector, WrappedComponent);
 
     forwardRef.displayName = displayName;
-
-    if (process.env.NODE_ENV !== 'production') {
-      StatefulComponentConnector.prototype.handleHotReload = function handleStateModulesHotReloadDuringDevelopment() {
-        // When we are not running in production we add a function to handle the hot reloading
-        // of our state modules when needed.
-        if (this.version !== version) {
-          // When we hot reload, run the handleHotReload function
-          console.log('Handle Hot Reload!');
-        }
-      };
-    }
 
     return React.forwardRef(forwardRef);
   };

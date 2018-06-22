@@ -12,7 +12,6 @@ export default class StateModuleTopLevelProvider extends React.Component {
     },
   };
   render() {
-    console.log(this);
     return <Provider value={this.#actions.childActions}>{this.props.children}</Provider>;
   }
 }
