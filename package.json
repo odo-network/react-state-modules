@@ -82,7 +82,7 @@
     "hoist-non-react-statics": "^2.5.5"
   },
   "peerDependencies": {
-    "state-modules": "^1.5.2",
+    "state-modules": "^1.6.0",
     "react": "^16.0.0"
   },
   "nyc": {
