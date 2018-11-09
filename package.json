@@ -1,7 +1,7 @@
 {
   "name": "react-state-modules",
   "description": "A lightweight immutable state management library",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Braden R. Napier",
   "private": false,
   "public": true,

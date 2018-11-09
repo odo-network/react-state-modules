@@ -1,5 +1,5 @@
 /* @flow */
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import { Consumer as StateModuleConsumer, Provider as StateModuleProvider } from './context';
 
@@ -58,68 +58,7 @@ export default function reactStateModulesConnector(subscriber, listener) {
      */
     const displayName = `StateConnected(|${getDisplayName(WrappedComponent)}|)`;
 
-    class StatefulComponentConnector extends PureComponent<*, *> {
-      static displayName = displayName;
-
-      constructor(props) {
-        super(props);
-
-        this.#parent = props.stateModuleParentActions;
-
-        if (subscriber.selectors) {
-          this.state.subscription = listener.subscribe({
-            /**
-             * Whenever the values selected by any of the components connected selectors change,
-             * the "next" function will be called by the connected StateModule.  We simply forceUpdate
-             * the component which causes getDerivedStateFromProps to capture the update.
-             */
-            next: (nextState, updateID) => {
-              // when our subscription updates we need to update our state but we do not necessarily
-              // want to re-render immediately.  We need to "bubble-up" so that we can maintain a top-down
-              // rendering approach when an update needs to propagate through our component tree.
-              this.stateModuleDidUpdate(nextState, updateID);
-            },
-            complete: () => this.state.subscription.unsubscribe(),
-          });
-          if (isDynamicConnection) {
-            // set initial props
-            this.state.subscription.setSelectorProps(props);
-          }
-          this.state.selected = this.state.subscription.getSelectorState(props);
-          this.#childProps = getChildProps(props, this.state);
-        }
-      }
-
-      state = {
-        parentStateUpdated: false,
-        parentState: undefined,
-        subscription: undefined,
-        updateID: -1,
-        selected: undefined,
-      };
-
-      static getDerivedStateFromProps = undefined;
-
-      componentWillUnmount() {
-        if (this.state.subscription) {
-          this.state.subscription.unsubscribe();
-        }
-      }
-
-      version = undefined;
-
-      /** When we want to render the component when flushed, we mark the component as "dirty".  If we are flushed and dirty is false, we pass the request to our children instead */
-      #dirty = false;
-
-      /** Holds the props we will pass to our children (props.$state).  The object is re-created whenever a change occurs so that our children trigger a re-render */
-      #childProps = Object.create(null);
-
-      /** Stores the next StatefulComponentConnector up in the tree to run actions against when needed */
-      #parent = undefined;
-
-      /** Each child requesting an update is added to the queue and parent continues by requesting an update itself */
-      #queue = new Set();
-
+    class StatefulComponentConnector extends React.Component<*, *> {
       /**
        * In order to maintain the appropriate top-down state rendering, we need to inform our parent of our intent to re-render based upon a
        * state change.  Each connected parent will receive the re-render requests and continue to pass the re-render request until we reach the
@@ -161,6 +100,55 @@ export default function reactStateModulesConnector(subscriber, listener) {
         },
       };
 
+      static displayName = displayName;
+
+      displayName = displayName;
+
+      constructor(props) {
+        super(props);
+
+        this.#parent = props.stateModuleParentActions;
+
+        if (subscriber.selectors) {
+          this.state.subscription = listener.subscribe({
+            /**
+             * Whenever the values selected by any of the components connected selectors change,
+             * the "next" function will be called by the connected StateModule.  We simply forceUpdate
+             * the component which causes getDerivedStateFromProps to capture the update.
+             */
+            next: (nextState, updateID) => {
+              // when our subscription updates we need to update our state but we do not necessarily
+              // want to re-render immediately.  We need to "bubble-up" so that we can maintain a top-down
+              // rendering approach when an update needs to propagate through our component tree.
+              this.stateModuleDidUpdate(nextState, updateID);
+            },
+            complete: () => this.state.subscription.unsubscribe(),
+          });
+          if (isDynamicConnection) {
+            // set initial props
+            this.state.subscription.setSelectorProps(props);
+          }
+          this.state.selected = this.state.subscription.getSelectorState(props);
+          this.#childProps = getChildProps(props, this.state);
+        }
+      }
+
+      state = {
+        parentStateUpdated: false,
+        parentState: undefined,
+        subscription: undefined,
+        updateID: -1,
+        selected: undefined,
+      };
+
+      componentWillUnmount() {
+        if (this.state.subscription) {
+          this.state.subscription.unsubscribe();
+        }
+      }
+
+      static getDerivedStateFromProps = undefined;
+
       /**
        * Whenever our subscription is triggered stateModuleDidUpdate is called to handle
        * the update.  This will only be triggered when this components selected state is
@@ -169,7 +157,7 @@ export default function reactStateModulesConnector(subscriber, listener) {
        * @memberof StatefulComponentConnector
        */
       stateModuleDidUpdate = (nextState, updateID) => {
-        console.log('StateModule Did Update');
+        // console.log('StateModule Did Update');
         this.#dirty = true;
         this.state.selected = nextState;
         this.state.updateID = updateID;
@@ -192,6 +180,18 @@ export default function reactStateModulesConnector(subscriber, listener) {
           queue.forEach(flush => flush());
         }
       };
+
+      /** Holds the props we will pass to our children (props.$state).  The object is re-created whenever a change occurs so that our children trigger a re-render */
+      #childProps = Object.create(null);
+
+      /** Stores the next StatefulComponentConnector up in the tree to run actions against when needed */
+      #parent = undefined;
+
+      /** Each child requesting an update is added to the queue and parent continues by requesting an update itself */
+      #queue = new Set();
+
+      /** When we want to render the component when flushed, we mark the component as "dirty".  If we are flushed and dirty is false, we pass the request to our children instead */
+      #dirty = false;
 
       render() {
         const { $forwardedRef$, $parent$, ...parentProps } = this.props;
