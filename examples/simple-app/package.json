@@ -9,7 +9,7 @@
     "promise": "8.0.1",
     "react": "^16.4.1",
     "react-dev-utils": "^5.0.1",
-    "react-dom": "^16.4.1",
+    "react-dom": "^16.4.2",
     "resolve": "1.6.0",
     "state-modules": "^1.5.0",
     "whatwg-fetch": "2.0.4"
