@@ -22,7 +22,7 @@
     "test": "node scripts/test.js --env=jsdom"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.51",
+    "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0-beta.51",
     "@babel/node": "^7.0.0-beta.51",
     "@babel/plugin-proposal-optional-chaining": "^7.0.0-beta.51",
